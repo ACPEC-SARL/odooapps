@@ -36,7 +36,7 @@
                                    readonly="state != 'draft'"
                                    context="{'default_type': 'purchase'}" help="Category of asset"/>
                             <field name="code" readonly="state != 'draft'"/>
-                            <field name="date" help="Date of asset" readonly="state != 'draft'"/>
+                            <field name="date" String="Date" help="Date of asset" readonly="state != 'draft'"/>
                             <field name="date_first_depreciation" readonly="state != 'draft'"/>
                             <field name="first_depreciation_manual_date"
                                    readonly="state != 'draft'"
@@ -226,7 +226,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_form">
-        <field name="name">Assets</field>
+        <field name="name">Asset</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_account_asset_asset_purchase_tree"/>

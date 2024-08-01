@@ -121,7 +121,7 @@ msgstr "Compte analytique"
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_search
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_asset_asset_report_search
 msgid "Asset"
-msgstr "Actifs"
+msgstr "Immobilisation"
 
 #. module: om_account_asset
 #: model:ir.model.fields,field_description:om_account_asset.field_account_asset_category__account_asset_id
@@ -170,13 +170,13 @@ msgstr "Date de début de l’immo"
 #: model:ir.model.fields,field_description:om_account_asset.field_product_template__asset_category_id
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_category_form
 msgid "Asset Type"
-msgstr "Type d'actif"
+msgstr "Type d'Immobilisation"
 
 #. module: om_account_asset
 #: model:ir.actions.act_window,name:om_account_asset.action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.menu,name:om_account_asset.menu_action_account_asset_asset_list_normal_purchase
 msgid "Asset Category"
-msgstr "Type d'actif"
+msgstr "Category d'Immobilisation"
 
 #. module: om_account_asset
 #: model:ir.model,name:om_account_asset.model_account_asset_category
@@ -184,7 +184,7 @@ msgstr "Type d'actif"
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_category_form
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_category_tree
 msgid "Asset category"
-msgstr "Catégorie d'actif"
+msgstr "Catégorie d'immobilisation"
 
 #. module: om_account_asset
 #: code:addons/om_account_asset/models/account_asset.py:0
@@ -219,7 +219,7 @@ msgstr "Reconnaissance des immobilisations/revenus"
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_asset_purchase_tree
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_category_search
 msgid "Assets"
-msgstr "Actifs"
+msgstr "Immobilisations"
 
 #. module: om_account_asset
 #: model:ir.actions.act_window,name:om_account_asset.action_asset_asset_report
@@ -449,7 +449,7 @@ msgstr "Amortissement actuel"
 #: model:ir.model.fields,field_description:om_account_asset.field_asset_asset_report__date
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_search
 msgid "Date"
-msgstr "Fecha"
+msgstr "Date"
 
 #. module: om_account_asset
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_asset_form
