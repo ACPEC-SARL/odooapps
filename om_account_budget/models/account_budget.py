@@ -167,20 +167,6 @@ class CrossoveredBudgetLines(models.Model):
                 acc_ids = line.general_budget_id.account_ids.ids
                 date_to = line.date_to
                 date_from = line.date_from
-                if line.analytic_account_id.id:
-                    analytic_line_obj = self.env['account.analytic.line']
-                    domain = [
-                        ('account_id', '=', line.analytic_account_id.id),
-                        ('date', '>=', date_from),
-                        ('date', '<=', date_to),
-                              ]
-                    if acc_ids:
-                        domain += [('general_account_id', 'in', acc_ids)]
-
-                    where_query = analytic_line_obj._where_calc(domain)
-                    analytic_line_obj._apply_ir_rules(where_query, 'read')
-                    from_clause, where_clause, where_clause_params = where_query.get_sql()
-                    select = "SELECT SUM(amount) from " + from_clause + " where " + where_clause
                 aml_obj = self.env['account.move.line']
                 domain = [('account_id', 'in', line.general_budget_id.account_ids.ids),
                             ('date', '>=', date_from),
