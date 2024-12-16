@@ -77,7 +77,7 @@ class HrPayslip(models.Model):
         return self.write({'state': 'draft'})
 
     def action_payslip_done(self):
-        self.compute_sheet()
+        # self.compute_sheet()
         return self.write({'state': 'done'})
 
     def action_payslip_cancel(self):
@@ -172,7 +172,8 @@ class HrPayslip(models.Model):
                 self.get_contract(payslip.employee_id, payslip.date_from, payslip.date_to)
             if not contract_ids:
                 raise ValidationError(_("No running contract found for the employee: %s or no contract in the given period" % payslip.employee_id.name))
-            lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
+            # lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
+            lines = [(0, 0, line) for line in payslip._get_payslip_lines(contract_ids, payslip.id)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
 
@@ -250,6 +251,12 @@ class HrPayslip(models.Model):
                 }
                 res += [input_data]
         return res
+
+    # def write(self,vals):
+    #     if 'struct_id' in vals:
+    #         1/0
+    #     else:
+    #         return super().write(vals)
 
     @api.model
     def _get_payslip_lines(self, contract_ids, payslip_id):
@@ -337,15 +344,23 @@ class HrPayslip(models.Model):
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
+
         if len(contracts) == 1 and payslip.struct_id:
             structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
         else:
             structure_ids = contracts.get_all_structures()
+
         #get the rules of the structure and thier children
+
+        # raise ValidationError(f"structure_ids {structure_ids}")
+
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
+
+        # raise ValidationError(f"sorted_rules {sorted_rules.ids}")
+
 
         for contract in contracts:
             employee = contract.employee_id
@@ -395,6 +410,8 @@ class HrPayslip(models.Model):
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
+        # raise ValidationError(f"blacklist {blacklist}")
+
 
         return list(result_dict.values())
 
@@ -442,7 +459,7 @@ class HrPayslip(models.Model):
         res['value'].update({
             'contract_id': contract.id
         })
-        struct = contract.struct_id
+        struct = self.struct_id if len(self) ==1 else contract.struct_id
         if not struct:
             return res
         res['value'].update({
@@ -458,8 +475,10 @@ class HrPayslip(models.Model):
         })
         return res
 
+
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
+        return
         self.ensure_one()
         if (not self.employee_id) or (not self.date_from) or (not self.date_to):
             return
@@ -529,6 +548,11 @@ class HrPayslipLine(models.Model):
     amount = fields.Float()
     quantity = fields.Float(default=1.0)
     total = fields.Float(compute='_compute_total', string='Total')
+
+    # def unlink(self):
+    #     1/0
+    #
+
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):

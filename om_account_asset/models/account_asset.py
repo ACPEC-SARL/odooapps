@@ -206,11 +206,11 @@ class AccountAssetAsset(models.Model):
         if asset_type:
             type_domain = [('type', '=', asset_type)]
 
-        ungrouped_assets = self.env['account.asset.asset'].search(type_domain + [('state', '=', 'open'), ('category_id.group_entries', '=', False)])
+        ungrouped_assets = self.env['account.asset.asset'].search(type_domain + [('state', '!=', 'draft'), ('category_id.group_entries', '=', False)])
         created_move_ids += ungrouped_assets._compute_entries(date, group_entries=False)
 
         for grouped_category in self.env['account.asset.category'].search(type_domain + [('group_entries', '=', True)]):
-            assets = self.env['account.asset.asset'].search([('state', '=', 'open'), ('category_id', '=', grouped_category.id)])
+            assets = self.env['account.asset.asset'].search([('state', '!=', 'draft'), ('category_id', '=', grouped_category.id)])
             created_move_ids += assets._compute_entries(date, group_entries=True)
         return created_move_ids
 
@@ -485,9 +485,14 @@ class AccountAssetAsset(models.Model):
         return super(AccountAssetAsset, self).copy_data(default)
 
     def _compute_entries(self, date, group_entries=False):
+        start_of_year = date.replace(month=1, day=1)
         depreciation_ids = self.env['account.asset.depreciation.line'].search([
-            ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
-            ('move_check', '=', False)])
+            ('asset_id', 'in', self.ids),
+            ('depreciation_date', '>=', start_of_year),
+            ('depreciation_date', '<=', date),
+            # ('move_check', '=', False),
+            ('move_posted_check', '=', False)
+        ])
         if group_entries:
             return depreciation_ids.create_grouped_move()
         return depreciation_ids.create_move()

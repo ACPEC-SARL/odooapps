@@ -419,7 +419,7 @@ msgstr "Depreciación corriente"
 #: model:ir.model.fields,field_description:om_account_asset.field_asset_asset_report__date
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_search
 msgid "Date"
-msgstr "Date"
+msgstr "Fecha"
 
 #. module: om_account_asset
 #: model_terms:ir.ui.view,arch_db:om_account_asset.view_account_asset_asset_form
