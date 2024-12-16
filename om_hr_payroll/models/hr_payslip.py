@@ -172,7 +172,6 @@ class HrPayslip(models.Model):
                 self.get_contract(payslip.employee_id, payslip.date_from, payslip.date_to)
             if not contract_ids:
                 raise ValidationError(_("No running contract found for the employee: %s or no contract in the given period" % payslip.employee_id.name))
-            # lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
             lines = [(0, 0, line) for line in payslip._get_payslip_lines(contract_ids, payslip.id)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
@@ -252,11 +251,6 @@ class HrPayslip(models.Model):
                 res += [input_data]
         return res
 
-    # def write(self,vals):
-    #     if 'struct_id' in vals:
-    #         1/0
-    #     else:
-    #         return super().write(vals)
 
     @api.model
     def _get_payslip_lines(self, contract_ids, payslip_id):
@@ -352,14 +346,11 @@ class HrPayslip(models.Model):
 
         #get the rules of the structure and thier children
 
-        # raise ValidationError(f"structure_ids {structure_ids}")
 
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
-
-        # raise ValidationError(f"sorted_rules {sorted_rules.ids}")
 
 
         for contract in contracts:
@@ -410,7 +401,7 @@ class HrPayslip(models.Model):
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
-        # raise ValidationError(f"blacklist {blacklist}")
+        
 
 
         return list(result_dict.values())
@@ -478,7 +469,7 @@ class HrPayslip(models.Model):
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
-        return
+        
         self.ensure_one()
         if (not self.employee_id) or (not self.date_from) or (not self.date_to):
             return
@@ -549,9 +540,6 @@ class HrPayslipLine(models.Model):
     quantity = fields.Float(default=1.0)
     total = fields.Float(compute='_compute_total', string='Total')
 
-    # def unlink(self):
-    #     1/0
-    #
 
 
     @api.depends('quantity', 'amount', 'rate')
